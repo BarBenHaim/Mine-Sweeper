@@ -1,0 +1,15 @@
+.cell {
+    background-color: rgb(194, 203, 203);
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+.mine {
+    background-color: #ff2424;
+}
+.hidden {
+    background-color: #000000;
+}
+.marked {
+    background-color: green;
+}
