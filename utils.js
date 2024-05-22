@@ -97,9 +97,17 @@ function getNegsCoords(cellI, cellJ, mat) {
     return negsCoords
 }
 
-// function getRandomColor2() {
-//     var colors = ['blue', 'red', 'pink', 'orange', 'yellow', 'lightblue']
+function sayNum(num) {
+    var digitNames = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+    var numStr = num.toString()
+    var ans = ''
 
-//     var colorIdx = getRandomIntInclusive(0, 5)
-//     return colors[colorIdx]
-// }
+    for (var i = 0; i < numStr.length; i++) {
+        var digit = parseInt(numStr[i])
+        ans += digitNames[digit]
+        if (i < numStr.length - 1) {
+            ans += ' '
+        }
+    }
+    return ans
+}

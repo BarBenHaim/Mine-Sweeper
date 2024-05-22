@@ -7,9 +7,37 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body onload="onInit()">
-        <table class="game-board"></table>
-        <!-- <h1>Lives <span>3</span></h1> -->
-        <!-- <footer>Made By Bar Ben Haim</footer> -->
+        <div class="game-container">
+            <div class="lvls-container">
+                <button data-size="4" data-mines="2" onclick="onLevelHandler(this)">Easy</button>
+                <button data-size="8" data-mines="14" onclick="onLevelHandler(this)">Medium</button>
+                <button data-size="12" data-mines="32" onclick="onLevelHandler(this)">Are You Sure?</button>
+            </div>
+            <div class="game-data">
+                <h2 class="lives">Lives <span>3</span></h2>
+                <h2 class="revealed">Score <span>0</span></h2>
+                <h2 class="marked">🚩 <span>0</span></h2>
+                <h2 class="timer"><span>00:00</span></h2>
+            </div>
+            <div class="hint-container"></div>
+            <div class="game-over-modal" hidden>
+                <h2></h2>
+                <button class="restart-btn" onclick="onInit()">Play Again</button>
+            </div>
+            <button class="smiley-btn" onclick="onInit()">😄</button>
+            <button class="safe-click-btn" onclick="onSafeClick()">
+                Safe Click <br /><span>3</span> clicks remain
+            </button>
+            <table class="game-board"></table>
+        </div>
+        <!-- <div class="scores-container">
+            <h2>Scores</h2>
+            <ul class="times-list"></ul>
+            <button onclick="clearTimes()">Clear Leaderboard</button>
+        </div> -->
+
+        <hr />
+        <footer>Made By Bar Ben Haim</footer>
         <script src="script.js"></script>
         <script src="utils.js"></script>
     </body>
