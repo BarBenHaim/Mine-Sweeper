@@ -8,10 +8,13 @@
     </head>
     <body onload="onInit()">
         <div class="game-container">
-            <div class="lvls-container">
+            <div class="btns-container">
                 <button data-size="4" data-mines="2" onclick="onLevelHandler(this)">Easy</button>
                 <button data-size="8" data-mines="14" onclick="onLevelHandler(this)">Medium</button>
-                <button data-size="12" data-mines="32" onclick="onLevelHandler(this)">Are You Sure?</button>
+                <button class="hard-btn" data-size="12" data-mines="32" onclick="onLevelHandler(this)">Hard</button>
+                <button class="dark-mode-btn" data-dark="false" onclick="onToggleDarkMode(this)">
+                    <span>Dark </span> Mode
+                </button>
             </div>
             <div class="game-data">
                 <h2 class="lives">Lives <span>3</span></h2>
@@ -20,25 +23,65 @@
                 <h2 class="timer"><span>00:00</span></h2>
             </div>
             <div class="hint-container"></div>
-            <div class="game-over-modal" hidden>
-                <h2></h2>
-                <button class="restart-btn" onclick="onInit()">Play Again</button>
+            <div class="game-tools-container">
+                <button class="undo-btn" onclick="onUndo()">UNDO</button>
+                <button class="exterminator-btn">PlaceHolder</button>
+                <button class="manually-btn" onclick="onManuallyCreate()">Manually placeholder</button>
+                <div class="safe-btn-container">
+                    <button class="safe-click-btn" onclick="onSafeClick()">Safe Click <br /></button>
+                    <p><span>3</span> Clicks Avaliable</p>
+                </div>
+                <div class="game-over-modal" hidden>
+                    <h2></h2>
+                    <button class="restart-btn" onclick="onInit()">Play Again</button>
+                </div>
+                <button class="mega-hint-btn" onclick="onMegaHint()">Mega Hint</button>
             </div>
-            <button class="smiley-btn" onclick="onInit()">😄</button>
-            <button class="safe-click-btn" onclick="onSafeClick()">
-                Safe Click <br /><span>3</span> clicks remain
-            </button>
-            <table class="game-board"></table>
+            <div class="game">
+                <button class="smiley-btn" onclick="onInit()">😄</button>
+                <table class="game-board"></table>
+            </div>
         </div>
-        <!-- <div class="scores-container">
-            <h2>Scores</h2>
-            <ul class="times-list"></ul>
-            <button onclick="clearTimes()">Clear Leaderboard</button>
-        </div> -->
+        <div class="leaderboards">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Times</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Easy</td>
+                        <td>
+                            <ul class="times-list-easy"></ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Medium</td>
+                        <td>
+                            <ul class="times-list-medium"></ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Hard</td>
+                        <td>
+                            <ul class="times-list-hard"></ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="reset-scoreboard-btn" onclick="clearTimes()">Clear Scoreboard</button>
 
         <hr />
         <footer>Made By Bar Ben Haim</footer>
-        <script src="script.js"></script>
-        <script src="utils.js"></script>
+        <script src="js/game.js"></script>
+        <script src="js/gameState.js"></script>
+        <script src="js/megaHint.js"></script>
+        <script src="js/timer.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/updates.js"></script>
+        <script src="js/manualCreate.js"></script>
     </body>
 </html>

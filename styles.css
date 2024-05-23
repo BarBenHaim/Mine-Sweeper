@@ -1,49 +1,86 @@
 body {
     text-align: center;
+    font-family: 'Verdana', 'Geneva', sans-serif;
+    background-color: #c0c0c0;
+    color: black;
 }
 
 .game-container {
-    background-color: #b9b9b9;
-    width: 600px;
-    border: 8px solid rgb(167, 167, 167);
+    background-color: #e0e0e0;
+    width: 450px;
+    border: 2px solid #808080;
     padding-bottom: 20px;
+    box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #fff;
+    margin: 0 auto;
+    padding: 5px;
 }
 
 .game-data {
     display: flex;
-    justify-content: center;
-    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
-    gap: 20px;
-    font-size: 15px;
+    font-size: 12px;
+    padding: 10px;
+    background-color: #bdbdbd;
+    border-bottom: 2px solid #808080;
+    border-top: 2px solid #fff;
 }
-.lvls-container button {
-    width: 120px;
-    background-color: #7d7d7d;
+
+.btns-container button {
+    width: 108px;
+    height: 40px;
+    background-color: #d3d3d3;
+    border: 2px solid #fff;
+    border-bottom-color: #808080;
+    border-right-color: #808080;
+    font-family: inherit;
 }
 
 .smiley-btn {
     font-size: 1.5em;
+    width: 40px;
+    height: 40px;
+    background-color: #dfdfdf;
+    border: 2px solid #fff;
+    border-bottom-color: #808080;
+    border-right-color: #808080;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 5px;
-    background-color: #b4bbc0;
-    box-shadow: inset -2px -2px 4px #fff, inset 2px 2px 4px #7d7d7d;
 }
+
 .cell {
-    background-color: #bdbdbd;
-    width: 45px;
-    height: 45px;
+    background-color: #dbdbdb;
+    width: 30px;
+    height: 30px;
     text-align: center;
-    border: 1px solid #7d7d7d;
-    font-size: 2rem;
+    border: 2px solid #ffffff;
+    border-bottom-color: #808080;
+    border-right-color: #808080;
+    font-size: 1.5rem;
     user-select: none;
+    display: inline-block;
+    line-height: 30px;
+}
+
+.cell.revealed {
+    background-color: #e0e0e0;
+    border: 2px solid #bdbdbd;
+    border-bottom-color: #fff;
+    border-right-color: #fff;
+}
+
+.hint-container {
+    background-color: #7f8cdf6b;
 }
 
 .hint {
-    background-color: #03b10300;
+    background-color: transparent;
     border: none;
-    font-size: 20px;
-    margin-bottom: 5px;
     border-radius: 50%;
+    font-size: 25px;
 }
 
 table {
@@ -52,7 +89,8 @@ table {
 }
 
 .mine {
-    background-color: #ff0000;
+    background-color: #ff5d5d;
+    color: #000000;
 }
 
 .one {
@@ -70,40 +108,43 @@ table {
 .hidden {
     background-color: #bdbdbd;
     color: #bdbdbd;
-    border: 2px solid #7d7d7d;
-    box-shadow: inset -2px -2px 4px #fff, inset 2px 2px 4px #7d7d7d;
+    border: 2px solid #fff;
+    border-bottom-color: #808080;
+    border-right-color: #808080;
 }
 
 .game-over-modal {
     background-color: #c6cfcf;
     padding: 10px;
     position: absolute;
-    border: 5px solid rgb(144, 144, 144);
-    width: 400px;
-    height: 200px;
+    border: 2px solid #808080;
+    width: 300px;
+    height: 100px;
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
+    box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #fff;
+    text-align: center;
 }
 
 .game-over-modal h2 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
 }
 
 button {
     cursor: pointer;
 }
+
 .hint.active {
-    background-color: yellow;
+    background-color: rgb(212, 212, 172);
 }
 
 .timer {
     font-family: 'Digital-7', 'Courier New', monospace;
-
     color: #fd0000;
     background-color: rgba(0, 0, 0, 0.7);
     padding: 5px;
-    border: 4px solid #7d7d7d;
+    border: 2px solid #7d7d7d;
     border-radius: 5px;
     display: inline-block;
     text-align: center;
@@ -112,8 +153,258 @@ button {
 
 .restart-btn {
     padding: 5px;
-    margin-top: 50px;
+    margin-top: 20px;
     border-radius: 5px;
-    border: none;
+    border: 2px solid #fff;
+    border-bottom-color: #808080;
+    border-right-color: #808080;
     font-size: 1em;
+    background-color: #d3d3d3;
+    cursor: pointer;
+}
+
+.safe-cell {
+    background-color: rgb(30, 131, 226);
+    color: rgb(30, 131, 226);
+}
+
+body.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.dark-mode .cell {
+    background-color: #444;
+    color: white;
+}
+
+.dark-mode .mine {
+    background-color: #ff6666;
+}
+
+.dark-mode .game-over-modal {
+    background-color: #222;
+    border-color: #555;
+}
+
+.dark-mode .lives,
+.dark-mode .revealed,
+.dark-mode .marked {
+    color: white;
+}
+
+.dark-mode .restart-btn {
+    background-color: #555;
+    color: white;
+}
+
+.dark-mode .timer span {
+    color: white;
+}
+
+.dark-mode .hidden {
+    background-color: #222;
+    color: #222;
+}
+
+.dark-mode .safe-cell {
+    background-color: #b4a0a0;
+    color: #b4a0a0;
+}
+.revealed-temp {
+    background-color: #e6f9ff;
+}
+
+.game-tools-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+.manually-btn {
+    background-color: rgb(63, 54, 53);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 10px;
+}
+
+.mega-hint-btn {
+    background-color: rgb(194, 167, 49);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 10px;
+    margin-bottom: 1px;
+}
+.mega-hint-btn.used {
+    background-color: rgb(59, 53, 24);
+
+}
+
+.leaderboards table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.leaderboards th,
+.leaderboards td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    font-size: 1em;
+}
+
+.leaderboards th {
+    background-color: #7880f0;
+    color: #ffffff;
+}
+
+.leaderboards td {
+    background-color: #eeeaea;
+}
+
+.times-list-easy,
+.times-list-medium,
+.times-list-hard {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.times-list-easy li,
+.times-list-medium li,
+.times-list-hard li {
+    padding: 2px 0;
+}
+
+.reset-scoreboard-btn {
+    background-color: #4b51a76e;
+    color: white;
+    padding: 5px 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-tools-container {
+    background-color: #c6c6d3;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.game-tools-container button {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /
+}
+
+.safe-btn-container {
+    margin-top: 20px;
+}
+.safe-btn-container p {
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+.safe-click-btn {
+    background-color: rgba(30, 131, 226, 0.733);
+    color: #ffffff;
+    border: none;
+    width: 100px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 4px;
+    margin-top: 10px;
+}
+.undo-btn {
+    background-color: #9e7503;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+}
+.exterminator-btn {
+    margin: 3px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgb(165, 0, 0);
+    color: rgb(255, 255, 255);
+}
+
+.dark-mode .exterminator-btn {
+    padding: 10px;
+    background-color: rgb(36, 145, 160);
+}
+
+.dark-mode .revealed-temp {
+    background-color: #264653;
+}
+
+.dark-mode .game-tools-container {
+    background-color: #2a9d8f;
+}
+
+.dark-mode .mega-hint-btn {
+    background-color: #515353;
+}
+
+.dark-mode .mega-hint-btn.used {
+    background-color: #515353;
+}
+
+.dark-mode .leaderboards th {
+    background-color: #2a9d8f;
+    color: #ffffff;
+}
+
+.dark-mode .leaderboards td {
+    background-color: #264653;
+}
+
+.dark-mode .game-tools-container {
+    background-color: #61a79e;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.dark-mode .safe-click-btn {
+    background-color: rgb(36, 145, 160);
+}
+
+.dark-mode .undo-btn {
+    background-color: #515353;
+}
+
+.dark-mode .game-container {
+    background-color: #2a9d8f;
+    width: 450px;
+    border: 2px solid #000000;
+    padding-bottom: 20px;
+    box-shadow: 2px 2px 4px #1a1717, -2px -2px 4px #000000;
+    margin: 0 auto;
+    padding: 5px;
+}
+.dark-mode .game-data{
+    background-color: #1a1717;
+}
+
+.dark-mode .hint-container{
+    background-color: #181818;
+}
+
+.dark-mode .btns-container button{
+    background-color: black;
+    color: #f3f3f3;
 }
