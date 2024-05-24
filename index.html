@@ -7,39 +7,41 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body onload="onInit()">
-        <div class="game-container">
-            <div class="btns-container">
-                <button data-size="4" data-mines="2" onclick="onLevelHandler(this)">Easy</button>
-                <button data-size="8" data-mines="14" onclick="onLevelHandler(this)">Medium</button>
-                <button class="hard-btn" data-size="12" data-mines="32" onclick="onLevelHandler(this)">Hard</button>
-                <button class="dark-mode-btn" data-dark="false" onclick="onToggleDarkMode(this)">
-                    <span>Dark </span> Mode
-                </button>
-            </div>
-            <div class="game-data">
-                <h2 class="lives">Lives <span>3</span></h2>
-                <h2 class="revealed">Score <span>0</span></h2>
-                <h2 class="marked">🚩 <span>0</span></h2>
-                <h2 class="timer"><span>00:00</span></h2>
-            </div>
-            <div class="hint-container"></div>
-            <div class="game-tools-container">
-                <button class="undo-btn" onclick="onUndo()">UNDO</button>
-                <button class="exterminator-btn">PlaceHolder</button>
-                <button class="manually-btn" onclick="onManuallyCreate()">Manually placeholder</button>
-                <div class="safe-btn-container">
-                    <button class="safe-click-btn" onclick="onSafeClick()">Safe Click <br /></button>
-                    <p><span>3</span> Clicks Avaliable</p>
+        <div class="game-block">
+            <div class="game-container">
+                <div class="btns-container">
+                    <button data-size="4" data-mines="2" onclick="onLevelHandler(this)">Easy</button>
+                    <button data-size="8" data-mines="14" onclick="onLevelHandler(this)">Medium</button>
+                    <button class="hard-btn" data-size="12" data-mines="32" onclick="onLevelHandler(this)">Hard</button>
+                    <button class="dark-mode-btn" data-dark="false" onclick="onToggleDarkMode(this)">
+                        <span>Dark </span> Mode
+                    </button>
                 </div>
-                <div class="game-over-modal" hidden>
-                    <h2></h2>
-                    <button class="restart-btn" onclick="onInit()">Play Again</button>
+                <div class="game-data">
+                    <h2 class="lives">Lives <span>3</span></h2>
+                    <h2 class="revealed">Score <span>0</span></h2>
+                    <h2 class="marked">🚩 <span>0</span></h2>
+                    <h2 class="timer"><span>00:00</span></h2>
                 </div>
-                <button class="mega-hint-btn" onclick="onMegaHint()">Mega Hint</button>
-            </div>
-            <div class="game">
-                <button class="smiley-btn" onclick="onInit()">😄</button>
-                <table class="game-board"></table>
+                <div class="hint-container"></div>
+                <div class="game-tools-container">
+                    <button class="undo-btn" onclick="onUndo()">UNDO</button>
+                    <button class="exterminator-btn" onclick="onExterminator()">Exterminator</button>
+                    <button class="manually-btn" onclick="onManuallyCreate()">Manually Create</button>
+                    <div class="safe-btn-container">
+                        <button class="safe-click-btn" onclick="onSafeClick()">Safe Click <br /></button>
+                        <p><span>3</span> Clicks Avaliable</p>
+                    </div>
+                    <div class="game-over-modal" hidden>
+                        <h2></h2>
+                        <button class="restart-btn" onclick="onInit()">Play Again</button>
+                    </div>
+                    <button class="mega-hint-btn" onclick="onMegaHint()">Mega Hint</button>
+                </div>
+                <div class="game">
+                    <button class="smiley-btn" onclick="onInit()">😄</button>
+                    <table class="game-board"></table>
+                </div>
             </div>
         </div>
         <div class="leaderboards">

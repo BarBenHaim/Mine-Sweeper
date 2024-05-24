@@ -1,3 +1,5 @@
+'use strict'
+
 function updateGame() {
     updateRevealed(0)
     updateLives(0)

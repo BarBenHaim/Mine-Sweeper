@@ -1,3 +1,5 @@
+'use strict'
+
 const MINE = '✷'
 const EMPTY = ''
 const FLAG = '🚩'
@@ -26,6 +28,7 @@ function onInit() {
         activeMegaHint: false,
         minesSteppedOn: 0,
         minesFlagged: 0,
+        isManualCreateMode: false,
     }
 
     gBoard = buildBoard()
@@ -58,7 +61,7 @@ function renderBoard(board) {
             var className = cell === MINE ? 'mine' : ''
             const tdId = `cell-${i}-${j}`
             strHTML += `<td id="${tdId}" class="${className} cell hidden"
-                                data-marked="false" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(event,this)">
+                                data-marked="false" onclick="handleCellClick(this,${i},${j})" oncontextmenu="onCellMarked(event,this)">
                               ${cell}
                         </td>`
         }
@@ -69,19 +72,27 @@ function renderBoard(board) {
     updateBoardAndClass(board)
 }
 
+function handleCellClick(elCell, i, j) {
+    if (gManualCreate.isOn) {
+        placeMineManual(i, j)
+    } else {
+        onCellClicked(elCell, i, j)
+    }
+}
+
 function onCellClicked(elCell, i, j) {
-    if (!gGame.isOn) return
-    if (elCell.dataset.marked === 'true') return
+    if (!gGame.isOn || elCell.dataset.marked === 'true') return
 
     if (gGame.isFirstMove) {
+        if (!gGame.isManualCreateMode) placeMines(gBoard, gLevel.MINES, { i, j })
         gStartTime = Date.now()
         startTimer()
-        placeMines(gBoard, gLevel.MINES, { i, j })
         addNumbers(gBoard)
         renderBoard(gBoard)
         elCell = document.getElementById(`cell-${i}-${j}`)
         gGame.isFirstMove = false
     }
+
     if (gGame.activeHint !== null) {
         revealHintCells(i, j)
         gGame.hintsAvailable--
@@ -90,6 +101,7 @@ function onCellClicked(elCell, i, j) {
         gGame.activeHint = null
         return
     }
+
     if (gMegaHint.hintStep > 0) {
         handleMegaHintClick(i, j)
         return
@@ -149,22 +161,6 @@ function onLevelHandler(elBtn) {
     gLevel.MINES = +elBtn.dataset.mines
     gLevel.SIZE = +elBtn.dataset.size
     onInit()
-}
-
-function placeMines(board, minesNum, firstClick) {
-    var emptyLocations = []
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[0].length; j++) {
-            if (!(i === firstClick.i && j === firstClick.j) && !isNeighboringCell(i, j, firstClick.i, firstClick.j)) {
-                emptyLocations.push({ i, j })
-            }
-        }
-    }
-    for (var i = 0; i < minesNum; i++) {
-        var randIdx = getRandomIntInclusive(0, emptyLocations.length - 1)
-        var location = emptyLocations.splice(randIdx, 1)[0]
-        board[location.i][location.j] = MINE
-    }
 }
 
 function addNumbers(board) {
@@ -227,9 +223,9 @@ function onCellMarked(ev, elCell) {
 }
 
 function checkGameOver() {
-    var totalReveals = gLevel.SIZE ** 2 - gLevel.MINES
-
-    if (gGame.shownCount === totalReveals && gGame.minesFlagged === gLevel.MINES - gGame.minesSteppedOn) {
+    var totalMinesNum = gGame.isManualCreateMode ? gManualCreate.minesPlaced : gLevel.MINES
+    var totalReveals = gLevel.SIZE ** 2 - totalMinesNum
+    if (gGame.shownCount === totalReveals && gGame.minesFlagged === totalMinesNum - gGame.minesSteppedOn) {
         var msg = 'You Won!'
         updateSmileyBtn('😎')
         var elapsedTime = Math.floor((Date.now() - gStartTime) / 1000)
@@ -316,6 +312,10 @@ function useHint(hintIndex) {
 function onSafeClick() {
     if (gGame.safeClicksCount > 0) {
         var toLocation = getSafeLocation()
+        if (!toLocation) {
+            alert('No Empty Spots!')
+            return
+        }
         var cellSelector = `#cell-${toLocation.i}-${toLocation.j}`
         var elCell = document.querySelector(cellSelector)
         elCell.classList.add('safe-cell')
@@ -324,6 +324,8 @@ function onSafeClick() {
         setTimeout(() => {
             elCell.classList.remove('safe-cell')
         }, 1500)
+    } else {
+        alert('No More Safe Clicks')
     }
 }
 
@@ -356,7 +358,7 @@ function onToggleDarkMode(elBtn) {
         elBtnTxt.innerText = 'Dark'
         elBtn.dataset.dark = 'false'
     } else {
-        elBtnTxt.innerText = 'Light'
+        elBtnTxt.innerText = 'Classic'
         elBtn.dataset.dark = 'true'
     }
 }
@@ -387,4 +389,112 @@ function placeMines(board, minesNum, firstClickCellCoords) {
 
 function isNeighboringCell(cellI, cellJ, firstClickI, firstClickJ) {
     return Math.abs(cellI - firstClickI) <= 1 && Math.abs(cellJ - firstClickJ) <= 1
+}
+
+function onExterminator() {
+    removeMines(3)
+}
+
+function removeMines(removeNum) {
+    const minesLocations = getNonAffectingMinesLocations()
+    if (minesLocations.length < removeNum) {
+        alert('Not enough mines to remove.')
+        return
+    }
+
+    const removeMinesCoords = getRandMinesLocations(minesLocations, removeNum)
+    removeMinesFromBoard(removeMinesCoords)
+    alert(`${removeNum} Mines Removed!`)
+
+    updateBoardAfterMineRemoval(removeMinesCoords)
+}
+
+function getNonAffectingMinesLocations() {
+    const minesLocations = getMinesLocations()
+    const nonAffectingMinesLocations = minesLocations.filter((coord) => {
+        return !isMineAffectingGameState(coord.i, coord.j)
+    })
+
+    return nonAffectingMinesLocations
+}
+
+function isMineAffectingGameState(mineI, mineJ) {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            const cellElement = document.getElementById(`cell-${i}-${j}`)
+            if (!cellElement.classList.contains('hidden') && isNeighboringCell(i, j, mineI, mineJ)) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+function getMinesLocations() {
+    const minesLocations = []
+
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[i].length; j++) {
+            const currCell = gBoard[i][j]
+            if (currCell === MINE) {
+                minesLocations.push({ i, j })
+            }
+        }
+    }
+
+    return minesLocations
+}
+
+function getRandMinesLocations(minesLocations, removeNum) {
+    const removeMinesCoords = []
+    for (var i = 0; i < removeNum; i++) {
+        const randomIdx = getRandomIntInclusive(0, minesLocations.length - 1)
+        removeMinesCoords.push(minesLocations[randomIdx])
+        minesLocations.splice(randomIdx, 1)
+    }
+
+    return removeMinesCoords
+}
+
+function removeMinesFromBoard(removeMinesCoords) {
+    removeMinesCoords.forEach((coord) => {
+        const { i, j } = coord
+        gBoard[i][j] = EMPTY
+        gGame.isManualCreateMode ? gManualCreate.minesPlaced-- : gLevel.MINES--
+
+        var cellElement = document.getElementById(`cell-${i}-${j}`)
+        cellElement.classList.remove('mine')
+        cellElement.innerHTML = ''
+    })
+}
+
+function updateBoardAfterMineRemoval(removeMinesCoords) {
+    removeMinesCoords.forEach((coord) => {
+        const { i, j } = coord
+        updateCellAndNeighbors(i, j)
+    })
+
+    updateBoardAndClass(gBoard)
+}
+
+function updateCellAndNeighbors(cellI, cellJ) {
+    const negsCoords = getNegsCoords(cellI, cellJ, gBoard)
+
+    negsCoords.push({ i: cellI, j: cellJ })
+
+    negsCoords.forEach(({ i, j }) => {
+        if (gBoard[i][j] !== MINE) {
+            gBoard[i][j] = setMinesNegsCount(i, j, gBoard)
+            var cellElement = document.getElementById(`cell-${i}-${j}`)
+            cellElement.innerHTML = gBoard[i][j] === 0 ? '' : gBoard[i][j]
+            cellElement.classList.remove('mine', 'number', 'empty')
+            if (typeof gBoard[i][j] === 'number' && gBoard[i][j] > 0) {
+                cellElement.classList.add('number')
+                var className = sayNum(gBoard[i][j])
+                cellElement.classList.add(className)
+            } else {
+                cellElement.classList.add('empty')
+            }
+        }
+    })
 }

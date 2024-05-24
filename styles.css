@@ -2,6 +2,7 @@ body {
     text-align: center;
     font-family: 'Verdana', 'Geneva', sans-serif;
     background-color: #c0c0c0;
+/* background-image: url('Images/background2.jpg'); */
     color: black;
 }
 
@@ -169,7 +170,7 @@ button {
 }
 
 body.dark-mode {
-    background-color: black;
+    background-image: url('Images/background1.jpg');
     color: white;
 }
 
@@ -223,7 +224,7 @@ body.dark-mode {
     position: relative;
 }
 .manually-btn {
-    background-color: rgb(63, 54, 53);
+    background-color: #4242a3;
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -407,4 +408,76 @@ body.dark-mode {
 .dark-mode .btns-container button{
     background-color: black;
     color: #f3f3f3;
+}
+
+.newMine{
+    background-color: #1518ce;
+}
+
+.dark-mode .newMine{
+    background-color: #b1e734;
+}
+
+.game-block{
+    padding: 20px;
+}
+.dark-mode .smiley-btn {
+background-color: #35362dfd;
+}
+
+
+.safe-btn-container {
+    margin-top: 20px;
+}
+.safe-btn-container p {
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+.safe-click-btn {
+    background-color: rgba(30, 131, 226, 0.733);
+    color: #ffffff;
+    border: none;
+    width: 100px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 4px;
+    margin-top: 10px;
+}
+.undo-btn {
+    background-color: #9e7503;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+}
+.exterminator-btn {
+    margin: 3px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgb(165, 0, 0);
+    color: rgb(255, 255, 255);
+}
+
+
+.mega-hint-btn:hover{
+    background-color: hsla(44, 83%, 14%, 0.9);
+    transition: 0.2s;
+}
+.undo-btn:hover{
+    background-color: hsla(44, 96%, 32%, 0.8);
+    transition: 0.2s;
+}
+.exterminator-btn:hover{
+    background-color: hsla(0, 100%, 32%, 0.8);
+    transition: 0.2s;
+}
+.safe-click-btn:hover{
+    background-color: hsla(209, 77%, 50%, 0.514);
+    transition: 0.2s;
+}
+.manually-btn:hover{
+    background-color: hsla(240, 42%, 45%, 0.8);
+    transition: 0.2s;
 }

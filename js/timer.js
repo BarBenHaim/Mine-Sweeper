@@ -1,3 +1,5 @@
+'use strict'
+
 function resetTimer() {
     clearInterval(gTimerInterval)
     var elTimer = document.querySelector('.timer span')
@@ -18,6 +20,7 @@ function startTimer() {
 }
 
 function saveTime(time) {
+    if (gGame.isManualCreateMode) return
     const level = getLevelName(gLevel.SIZE)
     let times = localStorage.getItem('times' + level)
 

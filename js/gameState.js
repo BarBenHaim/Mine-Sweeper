@@ -1,3 +1,5 @@
+'use strict'
+
 var gGameStateHistory = []
 
 function saveGameState() {
@@ -45,6 +47,8 @@ function saveBoardState() {
             id: cell.id,
             classList: [...cell.classList],
             innerHTML: cell.innerHTML,
+            dataMarked: cell.dataset.marked,
+            dataHidden: cell.classList.contains('hidden') ? 'true' : 'false',
         })
     })
     return boardState
@@ -55,5 +59,17 @@ function restoreBoardState(boardState) {
         const cell = document.getElementById(state.id)
         cell.className = state.classList.join(' ')
         cell.innerHTML = state.innerHTML
+        cell.dataset.marked = state.dataMarked
+        if (state.dataHidden === 'true') {
+            cell.classList.add('hidden')
+        } else {
+            cell.classList.remove('hidden')
+        }
     })
+}
+
+function updateGameDisplay() {
+    document.querySelector('.marked-count').innerText = gGame.markedCount
+    document.querySelector('.lives-count').innerText = gGame.lives
+    document.querySelector('.shown-count').innerText = gGame.shownCount
 }

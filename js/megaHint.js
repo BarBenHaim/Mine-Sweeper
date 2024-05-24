@@ -1,3 +1,5 @@
+'use strict'
+
 var gMegaHint = {
     hintStep: 0,
     hintCoords: {},
@@ -16,11 +18,13 @@ function getMegaHintCellsCoords(fromCellI, fromCellJ, toCellI, toCellJ) {
 }
 
 function onMegaHint() {
-    if (gMegaHint.used) {
+    if (gGame.isFirstMove) {
+        alert('Not avaliable in first turn.')
+        return
+    } else if (gMegaHint.used) {
         alert('Mega Hint can only be used once per game.')
         return
-    }
-    if (gMegaHint.hintStep === 0) {
+    } else if (gMegaHint.hintStep === 0) {
         gMegaHint.hintStep = 1
         gGame.activeMegaHint = true
         alert('Select the top-left cell for the Mega Hint.')
