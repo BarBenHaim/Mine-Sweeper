@@ -44,6 +44,8 @@ function displayTimes() {
     levels.forEach((level) => {
         let times = getTimes(level)
 
+        times.sort((a, b) => a - b)
+
         let elTimesList = document.querySelector('.times-list-' + level)
         let timesHTML = ''
 

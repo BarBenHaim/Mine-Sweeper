@@ -16,60 +16,13 @@ var gLevel = {
 }
 
 function onInit() {
-    gGame = {
-        isOn: true,
-        shownCount: 0,
-        markedCount: 0,
-        lives: 2,
-        isFirstMove: true,
-        hintsAvailable: 3,
-        activeHint: null,
-        safeClicksCount: 3,
-        activeMegaHint: false,
-        minesSteppedOn: 0,
-        minesFlagged: 0,
-        isManualCreateMode: false,
-    }
-
+    updateGame()
     gBoard = buildBoard()
     renderBoard(gBoard)
-    updateGame()
     closeModal()
     saveGameState()
     saveInitialState()
     displayTimes()
-}
-
-function buildBoard() {
-    const board = []
-    for (var i = 0; i < gLevel.SIZE; i++) {
-        board[i] = []
-        for (var j = 0; j < gLevel.SIZE; j++) {
-            board[i][j] = EMPTY
-        }
-    }
-    return board
-}
-
-function renderBoard(board) {
-    var strHTML = ''
-    for (var i = 0; i < board.length; i++) {
-        const row = board[i]
-        strHTML += '<tr>'
-        for (var j = 0; j < row.length; j++) {
-            const cell = row[j]
-            var className = cell === MINE ? 'mine' : ''
-            const tdId = `cell-${i}-${j}`
-            strHTML += `<td id="${tdId}" class="${className} cell hidden"
-                                data-marked="false" onclick="handleCellClick(this,${i},${j})" oncontextmenu="onCellMarked(event,this)">
-                              ${cell}
-                        </td>`
-        }
-        strHTML += '</tr>'
-    }
-    const elMat = document.querySelector('.game-board')
-    elMat.innerHTML = strHTML
-    updateBoardAndClass(board)
 }
 
 function handleCellClick(elCell, i, j) {
@@ -89,7 +42,7 @@ function onCellClicked(elCell, i, j) {
         startTimer()
         addNumbers(gBoard)
         renderBoard(gBoard)
-        elCell = document.getElementById(`cell-${i}-${j}`)
+        elCell = document.querySelector(getIdSelector({ i, j }))
         gGame.isFirstMove = false
     }
 
@@ -113,6 +66,8 @@ function onCellClicked(elCell, i, j) {
             updateSmileyBtn('😥')
             gGame.minesSteppedOn++
             elCell.classList.remove('hidden')
+            saveGameState()
+
             checkGameOver()
             return
         } else {
@@ -173,28 +128,6 @@ function addNumbers(board) {
     }
 }
 
-function updateBoardAndClass(board) {
-    for (var i = 0; i < board.length; i++) {
-        for (var j = 0; j < board[0].length; j++) {
-            var cellId = `cell-${i}-${j}`
-            var cellElement = document.getElementById(cellId)
-
-            if (cellElement) {
-                if (board[i][j] === 0) {
-                    board[i][j] = EMPTY
-                    cellElement.innerText = EMPTY
-                }
-                cellElement.classList.add(board[i][j] === EMPTY ? 'empty' : 'number')
-                if (cellElement.classList.contains('mine')) cellElement.classList.remove('number')
-                if (typeof board[i][j] === 'number' && board[i][j] >= 1 && board[i][j] <= 8) {
-                    var className = sayNum(board[i][j])
-                    cellElement.classList.add(className)
-                }
-            }
-        }
-    }
-}
-
 function onCellMarked(ev, elCell) {
     ev.preventDefault()
     if (!gGame.isOn) return
@@ -206,16 +139,10 @@ function onCellMarked(ev, elCell) {
         renderCell({ i: cellI, j: cellJ }, FLAG)
         elCell.dataset.marked = 'true'
         updateMarked(1)
-        if (gBoard[cellI][cellJ] === MINE) {
-            gGame.minesFlagged++
-        }
     } else if (elCell.dataset.marked === 'true') {
         renderCell({ i: cellI, j: cellJ }, gBoard[cellI][cellJ])
         elCell.dataset.marked = 'false'
         updateMarked(-1)
-        if (gBoard[cellI][cellJ] === MINE) {
-            gGame.minesFlagged--
-        }
     }
 
     saveGameState()
@@ -225,24 +152,23 @@ function onCellMarked(ev, elCell) {
 function checkGameOver() {
     var totalMinesNum = gGame.isManualCreateMode ? gManualCreate.minesPlaced : gLevel.MINES
     var totalReveals = gLevel.SIZE ** 2 - totalMinesNum
-    if (gGame.shownCount === totalReveals && gGame.minesFlagged === totalMinesNum - gGame.minesSteppedOn) {
-        var msg = 'You Won!'
-        updateSmileyBtn('😎')
-        var elapsedTime = Math.floor((Date.now() - gStartTime) / 1000)
-        saveTime(elapsedTime)
-        displayTimes()
-        openModal(msg)
-        clearInterval(gTimerInterval)
-        gGame.isOn = false
-        return
-    }
-
     if (gGame.lives <= 0) {
         var msg = 'You Lost!'
         updateSmileyBtn('😢')
         document.querySelectorAll('.mine.hidden').forEach((mine) => {
             mine.classList.remove('hidden')
         })
+        openModal(msg)
+        clearInterval(gTimerInterval)
+        gGame.isOn = false
+        return
+    }
+    if (gGame.shownCount === totalReveals && gGame.markedCount === totalMinesNum - gGame.minesSteppedOn) {
+        var msg = 'You Won!'
+        updateSmileyBtn('😎')
+        var elapsedTime = Math.floor((Date.now() - gStartTime) / 1000)
+        saveTime(elapsedTime)
+        displayTimes()
         openModal(msg)
         clearInterval(gTimerInterval)
         gGame.isOn = false
@@ -260,12 +186,6 @@ function openModal(msg) {
     var elModalTxt = elModal.querySelector('h2')
     elModalTxt.innerText = msg
     elModal.hidden = false
-}
-
-function renderCell(location, value) {
-    const cellSelector = '#' + getIdName(location)
-    const elCell = document.querySelector(cellSelector)
-    elCell.innerHTML = value
 }
 
 function revealHintCells(i, j) {
@@ -316,17 +236,14 @@ function onSafeClick() {
             alert('No Empty Spots!')
             return
         }
-        var cellSelector = `#cell-${toLocation.i}-${toLocation.j}`
-        var elCell = document.querySelector(cellSelector)
+        var elCell = document.querySelector(getIdSelector(toLocation))
         elCell.classList.add('safe-cell')
         updateSafeClicks(-1)
 
         setTimeout(() => {
             elCell.classList.remove('safe-cell')
         }, 1500)
-    } else {
-        alert('No More Safe Clicks')
-    }
+    } else alert('No More Safe Clicks')
 }
 
 function getSafeLocation() {
@@ -335,7 +252,7 @@ function getSafeLocation() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[i].length; j++) {
             const currCell = gBoard[i][j]
-            var elCurrCell = document.querySelector(`#cell-${i}-${j}`)
+            var elCurrCell = document.querySelector(getIdSelector({ i, j }))
             if (currCell !== MINE && elCurrCell.classList.contains('hidden')) {
                 safeLocations.push({ i, j })
             }
@@ -361,11 +278,6 @@ function onToggleDarkMode(elBtn) {
         elBtnTxt.innerText = 'Classic'
         elBtn.dataset.dark = 'true'
     }
-}
-
-function getIdName(location) {
-    const cellId = 'cell-' + location.i + '-' + location.j
-    return cellId
 }
 
 function placeMines(board, minesNum, firstClickCellCoords) {
@@ -405,24 +317,21 @@ function removeMines(removeNum) {
     const removeMinesCoords = getRandMinesLocations(minesLocations, removeNum)
     removeMinesFromBoard(removeMinesCoords)
     alert(`${removeNum} Mines Removed!`)
-
-    updateBoardAfterMineRemoval(removeMinesCoords)
+    updateNeighborsAfterMineRemoval(removeMinesCoords)
 }
 
 function getNonAffectingMinesLocations() {
     const minesLocations = getMinesLocations()
-    const nonAffectingMinesLocations = minesLocations.filter((coord) => {
-        return !isMineAffectingGameState(coord.i, coord.j)
-    })
-
-    return nonAffectingMinesLocations
+    return minesLocations.filter((coord) => !isMineAffectingGameState(coord.i, coord.j))
 }
 
 function isMineAffectingGameState(mineI, mineJ) {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
-            const cellElement = document.getElementById(`cell-${i}-${j}`)
-            if (!cellElement.classList.contains('hidden') && isNeighboringCell(i, j, mineI, mineJ)) {
+            if (
+                !document.querySelector(getIdSelector({ i, j })).classList.contains('hidden') &&
+                isNeighboringCell(i, j, mineI, mineJ)
+            ) {
                 return true
             }
         }
@@ -430,19 +339,22 @@ function isMineAffectingGameState(mineI, mineJ) {
     return false
 }
 
-function getMinesLocations() {
-    const minesLocations = []
+function removeMinesFromBoard(removeMinesCoords) {
+    removeMinesCoords.forEach((coord) => {
+        const { i, j } = coord
+        gBoard[i][j] = EMPTY
+        gGame.isManualCreateMode ? gManualCreate.minesPlaced-- : gLevel.MINES--
 
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[i].length; j++) {
-            const currCell = gBoard[i][j]
-            if (currCell === MINE) {
-                minesLocations.push({ i, j })
-            }
+        const cellElement = document.querySelector(getIdSelector({ i, j }))
+        if (cellElement.dataset.marked === 'true') {
+            cellElement.dataset.marked = 'false'
+            updateMarked(-1)
         }
-    }
 
-    return minesLocations
+        cellElement.classList.remove('mine')
+        cellElement.innerHTML = ''
+        cellElement.classList.add('hidden')
+    })
 }
 
 function getRandMinesLocations(minesLocations, removeNum) {
@@ -452,49 +364,59 @@ function getRandMinesLocations(minesLocations, removeNum) {
         removeMinesCoords.push(minesLocations[randomIdx])
         minesLocations.splice(randomIdx, 1)
     }
-
     return removeMinesCoords
 }
 
-function removeMinesFromBoard(removeMinesCoords) {
-    removeMinesCoords.forEach((coord) => {
-        const { i, j } = coord
-        gBoard[i][j] = EMPTY
-        gGame.isManualCreateMode ? gManualCreate.minesPlaced-- : gLevel.MINES--
-
-        var cellElement = document.getElementById(`cell-${i}-${j}`)
-        cellElement.classList.remove('mine')
-        cellElement.innerHTML = ''
-    })
-}
-
-function updateBoardAfterMineRemoval(removeMinesCoords) {
-    removeMinesCoords.forEach((coord) => {
-        const { i, j } = coord
-        updateCellAndNeighbors(i, j)
-    })
-
-    updateBoardAndClass(gBoard)
-}
-
-function updateCellAndNeighbors(cellI, cellJ) {
-    const negsCoords = getNegsCoords(cellI, cellJ, gBoard)
-
-    negsCoords.push({ i: cellI, j: cellJ })
-
-    negsCoords.forEach(({ i, j }) => {
-        if (gBoard[i][j] !== MINE) {
-            gBoard[i][j] = setMinesNegsCount(i, j, gBoard)
-            var cellElement = document.getElementById(`cell-${i}-${j}`)
-            cellElement.innerHTML = gBoard[i][j] === 0 ? '' : gBoard[i][j]
-            cellElement.classList.remove('mine', 'number', 'empty')
-            if (typeof gBoard[i][j] === 'number' && gBoard[i][j] > 0) {
-                cellElement.classList.add('number')
-                var className = sayNum(gBoard[i][j])
-                cellElement.classList.add(className)
-            } else {
-                cellElement.classList.add('empty')
+function getMinesLocations() {
+    const minesLocations = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[i].length; j++) {
+            if (gBoard[i][j] === MINE) {
+                minesLocations.push({ i, j })
             }
         }
-    })
+    }
+    return minesLocations
+}
+
+function buildBoard() {
+    const board = []
+    for (var i = 0; i < gLevel.SIZE; i++) {
+        board[i] = []
+        for (var j = 0; j < gLevel.SIZE; j++) {
+            board[i][j] = EMPTY
+        }
+    }
+    return board
+}
+
+function renderBoard(board) {
+    var strHTML = ''
+    for (var i = 0; i < board.length; i++) {
+        const row = board[i]
+        strHTML += '<tr>'
+        for (var j = 0; j < row.length; j++) {
+            const cell = row[j]
+            var className = cell === MINE ? 'mine' : ''
+            const tdId = `cell-${i}-${j}`
+            strHTML += `<td id="${tdId}" class="${className} cell hidden"
+                                data-marked="false" onclick="handleCellClick(this,${i},${j})" oncontextmenu="onCellMarked(event,this)">
+                              ${cell}
+                        </td>`
+        }
+        strHTML += '</tr>'
+    }
+    const elMat = document.querySelector('.game-board')
+    elMat.innerHTML = strHTML
+    updateBoardAndClass(board)
+}
+
+function renderCell(location, value) {
+    const elCell = document.querySelector(getIdSelector(location))
+    elCell.innerHTML = value
+}
+
+function getIdSelector(location) {
+    const cellId = '#cell-' + location.i + '-' + location.j
+    return cellId
 }

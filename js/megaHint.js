@@ -3,7 +3,6 @@
 var gMegaHint = {
     hintStep: 0,
     hintCoords: {},
-    gHoverCells: [],
     used: false,
 }
 
@@ -70,11 +69,6 @@ function showMegaHintCells(cellsToReveal) {
             }
         })
     }, 2000)
-}
-
-function updateMegaHintButton() {
-    const elMegaHintBtn = document.querySelector('.mega-hint-btn')
-    elMegaHintBtn.classList.add('used')
 }
 
 function resetMegaHintButton() {

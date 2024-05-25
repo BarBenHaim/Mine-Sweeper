@@ -82,6 +82,7 @@ body {
     border: none;
     border-radius: 50%;
     font-size: 25px;
+    transition: .2s;
 }
 
 table {
@@ -90,8 +91,8 @@ table {
 }
 
 .mine {
-    background-color: #ff5d5d;
-    color: #000000;
+    background:radial-gradient( rgb(255, 0, 0),#a08a8a);
+
 }
 
 .one {
@@ -107,6 +108,7 @@ table {
 }
 
 .hidden {
+    background:radial-gradient(circle at 90%,#bdbdbd,#bdbdbd);
     background-color: #bdbdbd;
     color: #bdbdbd;
     border: 2px solid #fff;
@@ -165,7 +167,8 @@ button {
 }
 
 .safe-cell {
-    background-color: rgb(30, 131, 226);
+    background:radial-gradient( #1123ca,rgb(175, 173, 173));
+
     color: rgb(30, 131, 226);
 }
 
@@ -204,11 +207,15 @@ body.dark-mode {
 }
 
 .dark-mode .hidden {
+    background:radial-gradient(rgb(39, 39, 39),rgb(39, 39, 39));
     background-color: #222;
-    color: #222;
+    color: rgb(39, 39, 39);
+
 }
 
 .dark-mode .safe-cell {
+    background: radial-gradient(rgb(25, 237, 245),rgb(112, 112, 112));
+
     background-color: #b4a0a0;
     color: #b4a0a0;
 }
@@ -312,6 +319,7 @@ body.dark-mode {
 .safe-btn-container {
     margin-top: 20px;
 }
+
 .safe-btn-container p {
     font-size: 10px;
     margin-top: 4px;
@@ -327,6 +335,7 @@ body.dark-mode {
     margin: 4px;
     margin-top: 10px;
 }
+
 .undo-btn {
     background-color: #9e7503;
     border: none;
@@ -334,6 +343,7 @@ body.dark-mode {
     padding: 10px 20px;
     color: white;
 }
+
 .exterminator-btn {
     margin: 3px;
     border: none;
@@ -397,6 +407,7 @@ body.dark-mode {
     margin: 0 auto;
     padding: 5px;
 }
+
 .dark-mode .game-data{
     background-color: #1a1717;
 }
@@ -411,24 +422,27 @@ body.dark-mode {
 }
 
 .newMine{
-    background-color: #1518ce;
+    background:radial-gradient( rgb(221, 35, 10),#beb9b9);
+
 }
 
 .dark-mode .newMine{
+    background: radial-gradient(rgb(179, 235, 25),rgb(102, 102, 102));
     background-color: #b1e734;
 }
 
 .game-block{
     padding: 20px;
 }
+
 .dark-mode .smiley-btn {
 background-color: #35362dfd;
 }
 
-
 .safe-btn-container {
     margin-top: 20px;
 }
+
 .safe-btn-container p {
     font-size: 10px;
     margin-top: 4px;
@@ -444,6 +458,7 @@ background-color: #35362dfd;
     margin: 4px;
     margin-top: 10px;
 }
+
 .undo-btn {
     background-color: #9e7503;
     border: none;
@@ -451,6 +466,7 @@ background-color: #35362dfd;
     padding: 10px 20px;
     color: white;
 }
+
 .exterminator-btn {
     margin: 3px;
     border: none;
@@ -460,23 +476,30 @@ background-color: #35362dfd;
     color: rgb(255, 255, 255);
 }
 
-
 .mega-hint-btn:hover{
     background-color: hsla(44, 83%, 14%, 0.9);
     transition: 0.2s;
 }
+
 .undo-btn:hover{
     background-color: hsla(44, 96%, 32%, 0.8);
     transition: 0.2s;
 }
+
 .exterminator-btn:hover{
     background-color: hsla(0, 100%, 32%, 0.8);
     transition: 0.2s;
 }
+
 .safe-click-btn:hover{
     background-color: hsla(209, 77%, 50%, 0.514);
     transition: 0.2s;
 }
+
+.dark-mode .manually-btn{
+    background-color: #636363;
+}
+
 .manually-btn:hover{
     background-color: hsla(240, 42%, 45%, 0.8);
     transition: 0.2s;
