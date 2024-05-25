@@ -2,8 +2,8 @@ body {
     text-align: center;
     font-family: 'Verdana', 'Geneva', sans-serif;
     background-color: #c0c0c0;
-/* background-image: url('Images/background2.jpg'); */
     color: black;
+    transition: .4s;
 }
 
 .game-container {
@@ -14,6 +14,9 @@ body {
     box-shadow: 2px 2px 4px #aaa, -2px -2px 4px #fff;
     margin: 0 auto;
     padding: 5px;
+    padding-bottom: 20px;
+    transition: .4s;
+
 }
 
 .game-data {
@@ -204,6 +207,17 @@ body.dark-mode {
 
 .dark-mode .timer span {
     color: white;
+}
+.dark-mode .one {
+    color: #ffffff;
+}
+
+.dark-mode .two {
+    color: #f0e32b;
+}
+
+.dark-mode .three {
+    color: #13fac8;
 }
 
 .dark-mode .hidden {
@@ -402,10 +416,8 @@ body.dark-mode {
     background-color: #2a9d8f;
     width: 450px;
     border: 2px solid #000000;
-    padding-bottom: 20px;
     box-shadow: 2px 2px 4px #1a1717, -2px -2px 4px #000000;
     margin: 0 auto;
-    padding: 5px;
 }
 
 .dark-mode .game-data{
@@ -504,3 +516,10 @@ background-color: #35362dfd;
     background-color: hsla(240, 42%, 45%, 0.8);
     transition: 0.2s;
 }
+
+.lives{
+    display: flex;
+    width: 25%;
+    font-size: 1.6em;
+}
+

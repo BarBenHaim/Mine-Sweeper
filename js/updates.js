@@ -5,7 +5,7 @@ function updateGame() {
         isOn: true,
         shownCount: 0,
         markedCount: 0,
-        lives: 2,
+        lives: 3,
         isFirstMove: true,
         hintsAvailable: 3,
         activeHint: null,
@@ -27,7 +27,7 @@ function updateGame() {
 }
 
 function updateGameDisplay() {
-    document.querySelector('.lives span').innerText = gGame.lives
+    document.querySelector('.lives span').innerText = '❤️'.repeat(gGame.lives)
     document.querySelector('.revealed span').innerText = gGame.shownCount
     document.querySelector('.marked span').innerText = gGame.markedCount
 
@@ -46,7 +46,7 @@ function updateSafeClicks(diff) {
 function updateLives(diff) {
     gGame.lives += diff
     var elLives = document.querySelector('.lives span')
-    elLives.innerText = gGame.lives
+    elLives.innerText = '❤️'.repeat(gGame.lives)
 }
 
 function updateMarked(diff) {
